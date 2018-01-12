@@ -6,8 +6,12 @@
 
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li><a href="#" (click)="onMenuSelect('Recipes')">Recipes</a></li>
-        <li><a href="#" (click)="onMenuSelect('Shopping List')">Shopping List</a></li>
+        <li role="presentation" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+          <a routerLink="/recipes">Recipes</a>
+        </li>
+        <li  role="presentation" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+          <a routerLink="/shoppinglist">Shopping List</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown" appDropdown>
