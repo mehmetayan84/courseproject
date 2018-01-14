@@ -1,16 +1,14 @@
-import { Recipe } from "./recipe.model";
-import { EventEmitter, Injectable } from "@angular/core";
-import { Ingredient } from "../shared/ingredient.model";
-import { ShoppingListService } from "../shopping-list/shopping-list.service";
+import { Recipe } from './recipe.model';
+import { Injectable } from '@angular/core';
+import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 @Injectable()
-export class RecipeService{
-    
-    selectedRecipe = new EventEmitter<Recipe>();
+export class RecipeService {
 
-    constructor(private shoppingListService:ShoppingListService){}
+    constructor(private shoppingListService: ShoppingListService){}
 
-    private recipes:Recipe[] = [
+    private recipes: Recipe[] = [
         new Recipe('A Test Recipe', 
         'This is simply a test', 
         'http://www.refikaninmutfagi.com/wp-content/uploads/2016/12/N6A7745-1.jpg',
@@ -28,11 +26,15 @@ export class RecipeService{
     )
       ];
 
-    getRecipeList(){
+    getRecipeList() {
         return this.recipes.slice();
     }
 
-    addIngredientsToShoppingList(ingredients:Ingredient[]){
+    getRecipe(id: number): Recipe {
+        return this.recipes[id];
+    }
+
+    addIngredientsToShoppingList(ingredients: Ingredient[]) {
         this.shoppingListService.addIngredients(ingredients);
     }
 }
