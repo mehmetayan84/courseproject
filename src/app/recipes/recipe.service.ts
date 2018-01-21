@@ -1,5 +1,6 @@
-import { Recipe } from './recipe.model';
 import { Injectable } from '@angular/core';
+
+import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
@@ -36,5 +37,28 @@ export class RecipeService {
 
     addIngredientsToShoppingList(ingredients: Ingredient[]) {
         this.shoppingListService.addIngredients(ingredients);
+    }
+
+    searchIngredient(index: number, deletedIngredient: string) {
+        const recipe = this.getRecipe(index);
+        for(let ingredient of recipe.ingredients) {
+            if (deletedIngredient === ingredient.name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    removeIngredient(index: number, deletedIngredient: string) {
+        let recipe: Recipe = this.getRecipe(index);
+        let deletingIndex: number;
+        for(let ingredient of recipe.ingredients) {
+            if(ingredient.name === deletedIngredient) {
+                deletingIndex = recipe.ingredients.indexOf(ingredient);
+            }
+        }
+
+        recipe.ingredients.splice(deletingIndex, 1);
     }
 }
