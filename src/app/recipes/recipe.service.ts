@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { Http, Response } from '@angular/http';
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
@@ -10,25 +13,9 @@ export class RecipeService {
 
     recipesChanged = new Subject<Recipe[]>();
 
-    constructor(private shoppingListService: ShoppingListService){}
+    constructor(private shoppingListService: ShoppingListService, private http: Http) {}
 
-    private recipes: Recipe[] = [
-        new Recipe('A Test Recipe', 
-        'This is simply a test', 
-        'http://www.refikaninmutfagi.com/wp-content/uploads/2016/12/N6A7745-1.jpg',
-        [new Ingredient('Carrot', 7),
-        new Ingredient('Tomatoes', 12),
-        new Ingredient('Meat', 1)]),
-        new Recipe('Another Test Recipe', 
-        'This is simply a test', 
-        'https://i.ytimg.com/vi/k1mnynExXlo/maxresdefault.jpg',
-        [
-            new Ingredient('Chicken', 1),
-            new Ingredient('Wheat', 20),
-            new Ingredient('Pepper', 5)
-        ]
-        )
-    ];
+    private recipes: Recipe[] = [];
 
     addRecipe(recipe: Recipe) {
         console.log(recipe);
@@ -79,6 +66,35 @@ export class RecipeService {
 
     deleteRecipe(recipe: Recipe) {
         this.recipes.splice(this.recipes.indexOf(recipe), 1);
+        this.recipesChanged.next(this.recipes.slice());
+    }
+
+    sendRecipes () {
+        return this.http.put('https://ng-recipe-project-93d23.firebaseio.com/data.json', this.recipes);
+    }
+
+    getRecipesFromDB () {
+        return this.http.get('https://ng-recipe-project-93d23.firebaseio.com/data.json').map
+        (
+            (response: Response) => {
+                const recipes: Recipe[] = response.json();
+                for (let recipe of recipes) {
+                    if (!recipe['îngredients']) {
+                        recipe['ingredients'] = [];
+                    }
+                }
+                return recipes;
+            }
+        )
+        .catch(
+            (error: Response) => {
+                return Observable.throw('Something went wrong!!!');
+            }
+        );
+    }
+
+    setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
         this.recipesChanged.next(this.recipes.slice());
     }
 }

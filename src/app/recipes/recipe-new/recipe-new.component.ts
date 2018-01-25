@@ -87,7 +87,7 @@ export class RecipeNewComponent implements OnInit {
     } else {
       this.recipeService.addRecipe(recipe);
     }
-    this.router.navigate(['../']), {relativeTo: this.route});
+    this.router.navigate((['../']), {relativeTo: this.route});
   }
 
   onCancel() {
